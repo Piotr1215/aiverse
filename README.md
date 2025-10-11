@@ -1,10 +1,10 @@
-# ai-coreutils
+# aiverse
 
-> What GNU coreutils are to Unix, ai-coreutils are to AI-assisted development
+> A universe of AI-augmented utilities - what GNU coreutils are to Unix, aiverse is to AI-assisted development
 
 ## Philosophy
 
-Unix coreutils (`ls`, `grep`, `sed`) operate on text streams through standard interfaces. AI-coreutils leverage Claude's capabilities through slash commands, agents, hooks, and MCP servers.
+Unix coreutils (`ls`, `grep`, `sed`) operate on text streams through standard interfaces. Aiverse utilities leverage Claude's capabilities through slash commands, agents, hooks, and MCP servers.
 
 ### The Evolution
 
@@ -44,8 +44,8 @@ Edit event → hook triggers → Claude uses tools → notifies user
 ## Installation
 
 ```bash
-/plugin marketplace add Piotr1215/ai-coreutils-marketplace
-/plugin install dev-essentials@ai-coreutils
+/plugin marketplace add Piotr1215/aiverse
+/plugin install dev-essentials@aiverse
 ```
 
 ## Components
