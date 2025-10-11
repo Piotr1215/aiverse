@@ -1,0 +1,31 @@
+{
+  "name": "ai-coreutils",
+  "owner": {
+    "name": "Piotr Zaniewski",
+    "email": "piotr@cloudrumble.net"
+  },
+  "metadata": {
+    "description": "Essential utilities for AI-assisted development, inspired by Unix coreutils",
+    "version": "1.0.0",
+    "homepage": "https://github.com/Piotr1215/ai-coreutils-marketplace",
+    "keywords": ["ai", "development", "workflow", "terminal", "mcp", "utilities"]
+  },
+  "plugins": [
+    {
+      "name": "dev-essentials",
+      "source": {
+        "source": "github",
+        "repo": "Piotr1215/claude-plugin-dev-essentials",
+        "branch": "main"
+      },
+      "description": "Essential AI-augmented dev utilities (commands, agents, hooks)",
+      "version": "0.1.0",
+      "author": {
+        "name": "Piotr Zaniewski"
+      },
+      "category": "productivity",
+      "keywords": ["development", "utilities", "coreutils", "documentation", "testing"],
+      "strict": true
+    }
+  ]
+}
