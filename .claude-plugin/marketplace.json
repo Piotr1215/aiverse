@@ -26,6 +26,26 @@
       "category": "productivity",
       "keywords": ["development", "utilities", "coreutils", "documentation", "testing"],
       "strict": true
+    },
+    {
+      "name": "vale-lsp",
+      "source": "./plugins/vale-lsp",
+      "description": "Vale prose linter LSP for markdown and MDX files",
+      "version": "1.0.0",
+      "author": {
+        "name": "Piotr Zaniewski"
+      },
+      "category": "development",
+      "strict": false,
+      "lspServers": {
+        "vale-ls": {
+          "command": "vale-ls",
+          "extensionToLanguage": {
+            ".md": "markdown",
+            ".mdx": "mdx"
+          }
+        }
+      }
     }
   ]
 }
