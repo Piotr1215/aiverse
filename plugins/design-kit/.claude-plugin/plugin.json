@@ -1,0 +1,20 @@
+{
+  "name": "design-kit",
+  "version": "0.1.5",
+  "description": "Test-driven, parallel-execution framework for building complex systems with confidence — prove components in isolation, then integrate via contracts.",
+  "author": {
+    "name": "Piotr Zaniewski",
+    "email": "piotr@cloudrumble.net"
+  },
+  "homepage": "https://github.com/Piotr1215/design-kit",
+  "repository": "https://github.com/Piotr1215/design-kit",
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "tdd",
+    "workflow",
+    "parallel",
+    "contracts",
+    "linear"
+  ]
+}
