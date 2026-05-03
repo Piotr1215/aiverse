@@ -1,0 +1,15 @@
+{
+  "name": "aiverse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A universe of AI-augmented development utilities",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "lint:md": "markdownlint-cli2 '**/*.md' '#node_modules' '#plugins/*/node_modules'"
+  },
+  "devDependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
+    "markdownlint-cli2": "^0.21.0"
+  }
+}

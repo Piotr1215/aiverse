@@ -1,82 +1,59 @@
 # aiverse
 
-> A universe of AI-augmented utilities - what GNU coreutils are to Unix, aiverse is to AI-assisted development
+> A universe of AI-augmented utilities — what GNU coreutils are to Unix, aiverse is to AI-assisted development.
 
 ## Philosophy
 
-Unix coreutils (`ls`, `grep`, `sed`) operate on text streams through standard interfaces. Aiverse utilities leverage Claude's capabilities through slash commands, agents, hooks, and MCP servers.
+Unix coreutils (`ls`, `grep`, `sed`) operate on text streams through standard interfaces. Aiverse utilities leverage Claude Code's capabilities through slash commands, agents, hooks, and MCP/LSP servers.
 
-### The Evolution
+### The parallel
 
-```
-Traditional:  User → Unix Tools (ls, grep, sed)
-AI-Enhanced:  User → Claude → Unix Tools + AI Capabilities
-```
+| Unix system | Description | Claude Code system | Description |
+| --- | --- | --- | --- |
+| Coreutils (`ls`, `grep`) | Small programs operating on text | Slash commands | Prompts guiding Claude's tool use |
+| Shell/pipes (`bash`, `\|`) | Composition layer chaining operations | Hooks (PostToolUse, SessionStart) | Event-driven automation |
+| Daemons (`sshd`, `httpd`) | Single-purpose services | Agents | Focused Claude instances for specialized tasks |
+| System services (systemd, cron) | Complex coordination | MCP/LSP servers | External tool and language integration |
 
-Claude sits between user and tools, leveraging both traditional Unix utilities and AI-specific operations. Not replacing, augmenting.
+### Common interface
 
-### The Parallel
-
-| Unix System | Description | Claude Code System | Description |
-|-------------|-------------|-----------|-------------|
-| **Coreutils** (`ls`, `grep`) | Small C programs<br>Operate on text | **Slash Commands** (`/ai-extract`, `/ai-summarize`) | Prompts guiding Claude's tool use<br>Predictable text operations |
-| **Shell/Pipes** (`bash`, `\|`) | Composition layer<br>Chain operations | **Hooks** (PostToolUse, SessionStart) | Event-driven automation<br>Orchestrate Claude's actions |
-| **Daemons** (`sshd`, `httpd`) | Single-purpose services<br>Always available | **Agents** (doc-writer, test-generator) | Focused Claude instances<br>Specialized tasks |
-| **System Services** (`systemd`, `cron`) | Complex coordination<br>Inter-process comm | **MCP Servers** (Model Context Protocol) | External tool integration<br>State & communication |
-
-### Common Interface
-
-Unix: stdin/stdout (text streams)
-Claude Code: tool calls/results + conversation context
-
-## Examples
-
-Just as you pipe Unix commands:
-```bash
-cat file.md | grep "TODO" | wc -l
-```
-
-Claude Code utilities compose through hooks and tool use:
-```
-Edit event → hook triggers → Claude uses tools → notifies user
-```
+- Unix: stdin/stdout text streams.
+- Claude Code: tool calls/results plus conversation context.
 
 ## Installation
 
 ```bash
 /plugin marketplace add Piotr1215/aiverse
-/plugin install dev-essentials@aiverse
+/plugin install <plugin-name>@aiverse
 ```
 
-## Components
+## Available plugins
 
-### Slash Commands
-Prompts that guide Claude to perform specific operations with consistent output format. Claude uses its tool capabilities under the hood. Examples: extract structured data, summarize in bullet format, semantic comparison.
+| Plugin | Description | Source |
+| --- | --- | --- |
+| `ai-coreutils` | Essential AI-augmented dev utilities (commands, agents, hooks) | [Piotr1215/ai-coreutils](https://github.com/Piotr1215/ai-coreutils) |
+| `vale-lsp` | Vale prose linter LSP for markdown and MDX | local (`./plugins/vale-lsp`) |
+| `design-kit` | Test-driven, parallel-execution framework for building complex systems | [Piotr1215/design-kit](https://github.com/Piotr1215/design-kit) |
 
-### Agents
-Pre-configured Claude instances with focused behavior and limited scope. Each agent has specific system prompts and tool access. Examples: documentation writer, test generator, security reviewer.
+## Design principles
 
-### Hooks
-Bash/Python scripts triggered by Claude Code lifecycle events (SessionStart, PostToolUse, Stop). Orchestrate workflows, call external systems, automate responses to Claude's actions.
-
-### MCP Servers
-Model Context Protocol servers that extend Claude's capabilities. Provide custom tools, maintain state, enable communication between instances, integrate external systems.
-
-## Available Plugins
-
-- **dev-essentials** - Core commands, hooks, and agents for AI-assisted development
-
-## Design Principles
-
-1. **Do one thing well** - Each component has singular focus
-2. **Composable** - Chain operations through standard interfaces
-3. **Generic** - Not tied to specific projects or workflows
-4. **Predictable** - Consistent input/output formats
-5. **Stateless** - Where possible (commands), stateful where needed (agents, servers)
+1. Do one thing well — singular focus per component.
+2. Composable — chain operations through standard interfaces.
+3. Generic — not tied to specific projects.
+4. Predictable — consistent input/output formats.
+5. Stateless where possible (commands), stateful where needed (agents, servers).
 
 ## Contributing
 
-Contributions must follow the philosophy: small, focused, generic, composable utilities that enhance Claude Code workflows.
+New plugins must follow the philosophy: small, focused, generic, composable.
+
+Each plugin entry in `.claude-plugin/marketplace.json` is validated against `schema/marketplace.schema.json` on every PR. Run validation locally:
+
+```bash
+npm install
+npm run validate
+npm run lint:md
+```
 
 ## License
 
