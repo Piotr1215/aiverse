@@ -46,6 +46,22 @@
           }
         }
       }
+    },
+    {
+      "name": "design-kit",
+      "source": {
+        "source": "github",
+        "repo": "Piotr1215/design-kit",
+        "branch": "v0.1.0"
+      },
+      "description": "Test-driven, parallel-execution framework for building complex systems with confidence — prove components in isolation, then integrate via contracts.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Piotr Zaniewski"
+      },
+      "category": "productivity",
+      "keywords": ["design", "tdd", "workflow", "parallel", "contracts", "linear"],
+      "strict": true
     }
   ]
 }
