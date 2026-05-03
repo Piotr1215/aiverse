@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "A universe of AI-augmented development utilities, inspired by Unix philosophy",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "homepage": "https://github.com/Piotr1215/aiverse",
     "keywords": ["ai", "development", "workflow", "terminal", "mcp", "utilities"]
   },
