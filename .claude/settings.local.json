@@ -1,0 +1,6 @@
+{
+  "enabledMcpjsonServers": [
+    "agentic-framework"
+  ],
+  "enableAllProjectMcpServers": true
+}

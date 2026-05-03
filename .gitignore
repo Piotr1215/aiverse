@@ -16,3 +16,7 @@ Thumbs.db
 # Node
 node_modules/
 package-lock.json
+
+# Override global ignores for repo-tracked Claude state
+!.claude/
+!.claude/**
