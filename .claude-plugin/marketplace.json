@@ -52,10 +52,10 @@
       "source": {
         "source": "github",
         "repo": "Piotr1215/design-kit",
-        "branch": "v0.1.2"
+        "branch": "v0.1.3"
       },
       "description": "Test-driven, parallel-execution framework for building complex systems with confidence — prove components in isolation, then integrate via contracts.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "author": {
         "name": "Piotr Zaniewski"
       },
