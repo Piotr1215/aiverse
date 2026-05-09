@@ -1,6 +1,6 @@
 {
   "name": "design-kit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Test-driven, parallel-execution framework for building complex systems with confidence — prove components in isolation, then integrate via contracts.",
   "author": {
     "name": "Piotr Zaniewski",

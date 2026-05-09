@@ -99,9 +99,10 @@ fi
 2. Read all `$SPEC_DIR/proofs/*/CONTRACT.md` - proven component interfaces
 3. Read all `$SPEC_DIR/proofs/*/TESTING.md` - validation strategies
 4. Read all `$SPEC_DIR/proofs/*/FEEDBACK.md` - discoveries and gotchas
-5. Check CLAUDE.md in the current repo for repo conventions
-6. Scan actual codebase to understand current implementation
-7. **CHECK MEMORY MCP** for proven test harness patterns to reuse Phase 1 harness
+5. Read all `$SPEC_DIR/proofs/*/memories.jsonl` - distilled insights from Phase 1 (skip absent)
+6. Check CLAUDE.md in the current repo for repo conventions
+7. Scan actual codebase to understand current implementation
+8. If `mcp__agent-memory__search_long_term_memory` is reachable, query `topics ∋ ["design-kit", "harness-setup"]` for proven harness setups to reuse with real data
 
 ## Task Generation Rules
 
@@ -195,7 +196,8 @@ Integrate proven [component] from Phase 1 into [target system].
 - **Regression test report**: Re-ran Phase 1 harness with real data
   - Copy Phase 1 test harness to project root
   - Update to target REAL system endpoints (not mocks)
-  - If Memory MCP has setup guide for this tech, follow it for quick setup
+  - If `mcp__agent-memory__search_long_term_memory` returns a `harness-setup` for this tech, follow it for quick setup
+- **Phase 2 memory bundle**: append integration-friction insights to `$SPEC_DIR/proofs/<component>/memories.jsonl` (same file as Phase 1 — bundle accumulates across phases). Required topics: `["design-kit", "phase-2-integration", <kind>]` where kind ∈ `integration-friction` (Phase 2 broke despite Phase 1 green, with root cause), `harness-reuse` (how the Phase 1 harness adapted to real data), or any Phase 1 kind tag if applicable. Same field rules as Phase 1 (`memory_type: "semantic"`, `namespace: "<slug>"`, ≥1 `file::` entity). NEVER call `mcp__agent-memory__create_long_term_memories` mid-phase — the finalize step at the end of this command syncs the bundle.
 - README.md section: [documentation updates]
 - INTEGRATION-ISSUES.md (if contract gaps found)
 
@@ -211,6 +213,7 @@ Integrate proven [component] from Phase 1 into [target system].
 - [ ] Integration-level automated tests created
 - [ ] Manual testing: [specific test count/scenarios]
 - [ ] Updated documentation
+- [ ] Phase 2 memory bundle entries appended to `memories.jsonl` (same-weight deliverable as INTEGRATION-ISSUES.md)
 
 ## If Contract is Insufficient
 
@@ -320,6 +323,38 @@ Identical to `/design-kit:dd-research-tasks` — see that command for details. Q
 If integration reveals contract gaps, do NOT work around them. Create a REFINEMENT issue (file `TASK-P1-X-REFINEMENT-*.md` locally and a Linear sub-issue under the original Phase 1 issue), refine the proof, update CONTRACT.md, then return here.
 ```
 
+## Memory Bundle Finalize (idempotent — runs every invocation)
+
+Phase 2 has no separate "between-phases" command, so this command does double duty: it generates tasks AND finalizes whatever Phase 2 memory entries exist at the moment it runs. **Re-run this command at the end of Phase 2** to trigger the sync of accumulated entries.
+
+**Why idempotent self-heal works here:**
+
+- First call (start of Phase 2) — no `phase-2-integration` entries exist yet → finalize is a no-op.
+- Mid-Phase calls (refinement, regenerating tasks) — partial entries get synced; subsequent runs skip dupes via `search_long_term_memory`.
+- Final call (end of Phase 2) — remaining entries sync.
+
+The dedupe-via-search guarantee makes re-runs safe regardless of how many times this happens.
+
+**Steps for each `proofs/<component>/memories.jsonl`:**
+
+1. Read entries with `topics ∋ "phase-2-integration"` (Phase 1 entries were already synced by `/dd-replan-after-research` — skip them by checking `proofs/<component>/memories.committed.jsonl` if present).
+2. Validate each entry — required: `text`, `memory_type == "semantic"`, `namespace == "<slug>"`, `topics ⊇ {"design-kit", "phase-2-integration"}`, ≥1 `file::` entity. Warn and skip malformed lines.
+3. Probe `mcp__agent-memory__search_long_term_memory` (e.g. `query: "design-kit", namespace: "<slug>", limit: 1`).
+
+**If reachable:**
+- For each entry: `search_long_term_memory` for near-duplicates in `namespace=<slug>`. Skip dupes.
+- Single `mcp__agent-memory__create_long_term_memories` call per proof with novel entries.
+- Append outcomes to `proofs/<component>/memories.committed.jsonl` (one line per source entry, `status: created|skipped`, returned ID, `source_line`, and `phase: "phase-2-integration"` to distinguish from Phase 1 records).
+
+**If unreachable:**
+```
+⚠ mcp__agent-memory unreachable — Phase 2 memory entries NOT synced.
+  memories.jsonl files remain canonical and committed.
+  Re-run /design-kit:dd-integration-tasks when the server is back to sync (idempotent via dedupe).
+```
+
+**Gate behavior is unchanged.** This finalize step is post-task-generation and never blocks the gate. A failed sync logs a warning and exits cleanly.
+
 ## Next Steps
 
 After Phase 2 tasks are generated:
@@ -328,3 +363,4 @@ After Phase 2 tasks are generated:
 - If contract gaps found → create REFINEMENT tasks
 - Verify no regressions in existing functionality
 - Update documentation (and re-sync the Linear plan doc if PLAN.md changed)
+- **Re-run `/design-kit:dd-integration-tasks` when Phase 2 work concludes** to flush the accumulated memory bundle to the store (idempotent — see "Memory Bundle Finalize" above)

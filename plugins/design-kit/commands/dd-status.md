@@ -61,8 +61,9 @@ State: <state name>
   - PLAN.md:       <yes/no> [mtime: <ISO>]
   - SCHEMA.md:     <yes/no/n.a.>
   - Tasks:         <P1: N done / M total> | <P2: N done / M total>
-  - Proofs:        <component: ✓ ✓ ✓ — CONTRACT TESTING FEEDBACK> per row
+  - Proofs:        <component: ✓ ✓ ✓ ✓ — CONTRACT TESTING FEEDBACK MEMORIES> per row
   - Phase 1.5:     <not run | done <ISO> | STALE — newer files: ...>
+  - Memory sync:   <none | synced (N entries) | DEFERRED — re-run replan when memory MCP is back | proofs without bundle: <list>>
   - Refinements:   <none | N active: TASK-P1-X-REFINEMENT-foo, ...>
 
 Next: <one-line recommended command, with example args>

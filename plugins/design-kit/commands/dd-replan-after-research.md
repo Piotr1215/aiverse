@@ -120,7 +120,40 @@ Ask: "Apply these deltas to PLAN.md (and SCHEMA.md if present)? [yes / let me ed
 - **let me edit** → write the proposed deltas to `$SPEC_DIR/REPLAN-PROPOSAL.md` and stop. The user edits, then re-runs `/design-kit:dd-replan-after-research` to apply
 - **skip** → write the marker anyway with `decision: skip` (user explicitly said the plan is fine as-is); continue to step 5
 
-### 5. Write the marker
+### 5. Finalize the per-proof memory bundle
+
+Phase 1 proofs append to `proofs/<component>/memories.jsonl` during research (see `dd-research-tasks` "Memory" section). This step is the only place `mcp__agent-memory__create_long_term_memories` ever gets called for those entries — the bundle stays canonical, the memory store is a parallel index sink.
+
+**Read + validate every proof's bundle.** For each `proofs/<component>/memories.jsonl`:
+
+1. Skip silently if the file is absent (warn at the end if no proof produced one — soft signal).
+2. Validate every line as JSON. Required: `text`, `memory_type == "semantic"`, `namespace == "<slug>"`, `topics ⊇ {"design-kit", "phase-1-research"}`, ≥1 entity matching `^file::`. Warn and skip malformed lines — do not block.
+
+**Probe the memory store sink.** Try a trivial `mcp__agent-memory__search_long_term_memory` call (e.g. `query: "design-kit", namespace: "<slug>", limit: 1`).
+
+**If reachable — sink: memory store + JSONL:**
+
+For each proof, for each valid entry:
+
+- Search `mcp__agent-memory__search_long_term_memory` with the entry's text and `namespace=<slug>`. If a near-duplicate exists, mark `skipped: dupe of <existing-id>`.
+- Collect novel entries; make ONE `mcp__agent-memory__create_long_term_memories` call per proof with the array.
+- Write `proofs/<component>/memories.committed.jsonl` — one line per source entry recording either `{"status":"created","id":"<returned>","source_line":N}` or `{"status":"skipped","reason":"dupe","of":"<existing-id>","source_line":N}`. This is the audit trail; it gets committed alongside `memories.jsonl`.
+
+Set `memory_sync: synced` in the marker.
+
+**If unreachable — sink: JSONL only:**
+
+```
+⚠ mcp__agent-memory unreachable — memory bundle NOT synced to the store.
+  memories.jsonl files remain canonical and committed.
+  Re-running /design-kit:dd-replan-after-research when the server is back will sync (idempotent via dedupe).
+```
+
+Set `memory_sync: deferred` in the marker. Do NOT block the marker write — Phase 1.5 still completes, the deferred sync is a separate concern.
+
+**Idempotency.** Re-running this command always re-probes and re-syncs. Dedupe via search makes re-runs safe regardless of whether the previous run succeeded, partially succeeded, or deferred.
+
+### 6. Write the marker
 
 Write `$SPEC_DIR/.phase-1.5-complete` with this content:
 
@@ -139,6 +172,12 @@ contributors:
 deltas_applied:
   plan: <count or "none">
   schema: <count or "none" or "n/a — no SCHEMA.md">
+
+# Memory bundle finalize state
+memory_sync: <synced | deferred | none>   # none = no proof produced memories.jsonl
+memory_synced_count: <total entries created across all proofs>
+memory_skipped_count: <total entries skipped as duplicates>
+memory_proofs_without_bundle: [<component>, ...]   # soft warning, not a block
 
 # Full digest below — useful as audit trail for /design-kit:dd-integration-tasks
 ---

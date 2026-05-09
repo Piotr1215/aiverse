@@ -101,18 +101,67 @@ Prove [component X] works reliably in isolation with automated validation.
 - [Library/tool name 2]
 - [Testing framework for validation]
 
-## CRITICAL: Check Memory for Proven Test Harness Patterns
+## Memory: Read Setup Guides, Write a Per-Proof Bundle
 
-**BEFORE setting up a new test harness, check if Memory MCP has proven patterns:**
+This section replaces the older "if novel harness" rule. Memory creation is no longer optional and no longer happens mid-phase — every proof MUST produce a `memories.jsonl` bundle, and the Phase 1.5 finalize step (`/design-kit:dd-replan-after-research`) is the only place that calls `create_long_term_memories`.
 
-**If Memory MCP available:**
-1. Search for: `[tech-stack] quick setup guide` or `[tech-stack] test harness`
-2. Example queries: "Playwright quick setup", "Jest configuration", "Pytest harness", "Cypress setup"
-3. Follow proven steps from memory to avoid common pitfalls
+### Read before setup
 
-**If you create a NOVEL test harness (not in memory): YOU MUST add your setup steps to memory.**
+If `mcp__agent-memory__search_long_term_memory` is reachable, query before designing the harness:
 
-Create memory entity with pattern: `[Tech]_Quick_Setup_Guide`. Use generic, copy-paste-ready commands. Skip project-specific details.
+- `topics ∋ ["design-kit", "harness-setup"]` plus your tech-stack keywords
+- Or semantic query: `"<tech-stack> Quick Setup Guide"`
+
+Follow proven steps to skip pitfalls. If unreachable or no hits, you're producing the next entry — proceed to the bundle below.
+
+### Write during the phase — append to `memories.jsonl`
+
+Every insight you'd put in `FEEDBACK.md` (gotchas, harness setup steps, validator-choice rationale, contract patterns, schema gaps) ALSO gets one line appended to:
+
+```
+$SPEC_DIR/proofs/<component>/memories.jsonl
+```
+
+JSONL — one memory per line, each line a ready `create_long_term_memories` payload entry.
+
+**Mandatory fields on every entry:**
+
+| Field | Required value |
+|---|---|
+| `memory_type` | `"semantic"` (literal string — `episodic`/`message` valid in API but unused here; other values silently default to `semantic` and corrupt the index) |
+| `namespace` | `"<slug>"` — the design-kit project slug (NOT `"work"`, NOT the repo name) |
+| `topics` | MUST include `"design-kit"`, `"phase-1-research"`, AND one kind tag (table below) |
+| `entities` | MUST include at least one `file::<repo-relative-path>` |
+| `text` | Lead with intent prefix: `[factual]` / `[pattern]` / `[tip]` / `[gotcha]` / `[decision]` |
+
+**Kind tags — pick exactly one per memory, add to `topics`:**
+
+- `harness-setup` — `[Tech]_Quick_Setup_Guide` style; highest cross-project reuse
+- `contract-pattern` — interface shape that worked between proven components
+- `validator-choice` — chose tool X over Y in domain Z, with rationale
+- `fixture-corpus` — how to structure fixtures for tech Z
+- `schema-gap` — Phase 1 schema needed revision
+
+Plus 1-3 content topics (lowercase-hyphenated, each its own array element — never pipe-concatenated).
+
+**Sample line:**
+
+```jsonl
+{"text":"[gotcha] cross-fork PR observer workflows can't write artifacts — token is read-only; observer must skip upload step","memory_type":"semantic","namespace":"<slug>","topics":["design-kit","phase-1-research","harness-setup","github-actions","workflow_run"],"entities":["GITHUB_TOKEN","actions/upload-artifact","file::proofs/observer-workflow/run.sh"]}
+```
+
+### Strict rules
+
+- **NEVER call `mcp__agent-memory__create_long_term_memories` during the phase.** Bundle only.
+- **No artificial cap on entries.** Dedupe runs at finalize via `search_long_term_memory`. Honest insights aren't capped.
+- **Append-only.** Don't rewrite earlier lines in `memories.jsonl` — the diff is the audit trail.
+- **One bundle per proof, not per phase.** Parallel proofs never conflict on the same file.
+
+### Why bundle, not direct write
+
+- **Edit-before-sync.** The JSONL is a diffable, greppable audit trail you can inspect (and edit) before the finalize step writes anything to the store. Direct mid-phase writes can't be reviewed. Note: `~/.claude/specs/` is typically tracked in your personal config repo, so committing the bundle there gives you `git diff` review at sync time.
+- **Decoupled from store availability.** If `mcp__agent-memory__*` is unreachable, JSONL is canonical and the proof still ships. Finalize re-runs idempotently when the store is back.
+- **Atomic per proof.** Finalize is one `create_long_term_memories` call per proof — fewer round trips, no partial state on failure.
 
 ## Deliverable
 
@@ -147,6 +196,7 @@ Working proof in `$SPEC_DIR/proofs/[component-name]/` with:
    - [ ] TESTING.md (how to run, what's validated, pass criteria from test data)
    - [ ] CONTRACT.md (API/interface + gotchas discovered during testing)
    - [ ] FEEDBACK.md (design choices + surprises learned from test results)
+   - [ ] memories.jsonl (per-proof bundle — see "Memory: Read Setup Guides, Write a Per-Proof Bundle" above; same-weight deliverable as CONTRACT.md, finalized in Phase 1.5)
    - [ ] README.md (quick start, dependencies)
 
 **Anti-Pattern**: Writing 100+ tests then running them all at once (no regression detection)

@@ -174,7 +174,7 @@ Each component must be:
 
 For each component:
 - Design EFFECTIVE testing strategy first (what can go wrong in YOUR use case?)
-- **CHECK MEMORY MCP** for proven test harness setups (e.g., `Playwright_Quick_Setup_Guide`)
+- Search prior `harness-setup` memories (`mcp__agent-memory__search_long_term_memory` with `topics ∋ ["design-kit", "harness-setup"]`) — see `/design-kit:dd-research-tasks` "Memory" section for the per-proof `memories.jsonl` bundle pattern that finalizes those insights
 - Implement test harness (run.sh)
 - **Develop tests INCREMENTALLY:**
   - Start with ONE happy-path test
@@ -183,7 +183,7 @@ For each component:
   - Build confidence iteratively until reliability requirements met
 - Collect results (pass/fail logs, metrics)
 - THEN write docs based on empirical evidence
-- **ADD TO MEMORY** if you created a novel test harness (save future agents hours of setup)
+- Append harness setup steps and gotchas to the per-proof `memories.jsonl` bundle (the Phase 1.5 finalize step syncs to the memory store)
 
 **Focus on test design quality and incremental development over arbitrary test counts.**
 
