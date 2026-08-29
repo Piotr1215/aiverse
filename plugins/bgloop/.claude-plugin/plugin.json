@@ -1,0 +1,15 @@
+{
+  "name": "bgloop",
+  "description": "Background AI loop: a session event leaves for a detached one-shot observer and a bounded action comes back to that same session.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Piotr Zaniewski",
+    "email": "piotr@cloudrumble.net"
+  },
+  "homepage": "https://github.com/Piotr1215/aiverse",
+  "repository": "https://github.com/Piotr1215/aiverse",
+  "license": "MIT",
+  "keywords": ["observer", "hooks", "coach", "background", "ledger"],
+  "hooks": "./hooks/hooks.json",
+  "defaultEnabled": false
+}

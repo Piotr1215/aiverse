@@ -8,7 +8,14 @@
     "description": "A universe of AI-augmented development utilities, inspired by Unix philosophy",
     "version": "1.0.1",
     "homepage": "https://github.com/Piotr1215/aiverse",
-    "keywords": ["ai", "development", "workflow", "terminal", "mcp", "utilities"]
+    "keywords": [
+      "ai",
+      "development",
+      "workflow",
+      "terminal",
+      "mcp",
+      "utilities"
+    ]
   },
   "plugins": [
     {
@@ -24,7 +31,13 @@
         "name": "Piotr Zaniewski"
       },
       "category": "productivity",
-      "keywords": ["development", "utilities", "coreutils", "documentation", "testing"],
+      "keywords": [
+        "development",
+        "utilities",
+        "coreutils",
+        "documentation",
+        "testing"
+      ],
       "strict": true
     },
     {
@@ -50,13 +63,38 @@
     {
       "name": "design-kit",
       "source": "./plugins/design-kit",
-      "description": "Test-driven, parallel-execution framework for building complex systems with confidence — prove components in isolation, then integrate via contracts.",
+      "description": "Test-driven, parallel-execution framework for building complex systems with confidence \u2014 prove components in isolation, then integrate via contracts.",
       "version": "0.1.5",
       "author": {
         "name": "Piotr Zaniewski"
       },
       "category": "productivity",
-      "keywords": ["design", "tdd", "workflow", "parallel", "contracts", "linear"],
+      "keywords": [
+        "design",
+        "tdd",
+        "workflow",
+        "parallel",
+        "contracts",
+        "linear"
+      ],
+      "strict": true
+    },
+    {
+      "name": "bgloop",
+      "source": "./plugins/bgloop",
+      "description": "Background AI loop: a session event leaves for a detached one-shot observer and a bounded action comes back to that same session.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Piotr Zaniewski"
+      },
+      "category": "productivity",
+      "keywords": [
+        "observer",
+        "hooks",
+        "coach",
+        "background",
+        "ledger"
+      ],
       "strict": true
     }
   ]

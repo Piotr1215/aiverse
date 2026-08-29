@@ -20,3 +20,7 @@ package-lock.json
 # Override global ignores for repo-tracked Claude state
 !.claude/
 !.claude/**
+
+# Python
+__pycache__/
+.pytest_cache/
