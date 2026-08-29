@@ -27,7 +27,7 @@ One observer, the Luna prompt coach. It reads a submitted prompt, retrieves the 
 | `hooks/hooks.json` | `UserPromptSubmit` enqueues a job, `Stop` clears the turn marker. |
 | `skills/bgloop/` | The operator surface: status, budgets, learned tips, replay. `/bgloop`. |
 | `scripts/tip_write.sh` | Writes the spinner seam, the surface a human reads the tip on. |
-| `tests/` | 94 tests. `uvx pytest tests/ -q` from the plugin root. |
+| `tests/` | 94 python tests, `uvx pytest tests/ -q`, plus 16 shell tests, `bash tests/test_tip_write.sh`. |
 
 Neither hook group carries a `matcher`. That is not an omission: across every plugin installed on this machine, `Stop` and `UserPromptSubmit` groups carry one zero times out of 84 and 94. Matchers select tools, and neither of these events has one to select. plugin-dev's `validate-hook-schema.sh` reports a missing matcher here, and it is wrong for non-tool events.
 
