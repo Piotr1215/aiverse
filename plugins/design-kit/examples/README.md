@@ -5,15 +5,18 @@ This directory contains real-world examples of Design-Kit workflows.
 ## Available Examples
 
 ### [API with Authentication](api-with-auth/)
+
 A REST API with OAuth2 authentication and rate limiting.
 
 **Demonstrates**:
+
 - Breaking down a complex API into parallel proofs
 - Contract-based integration between auth and API layers
 - Test harness setup for HTTP endpoints
 - Iterative refinement based on feedback
 
 **Key Learnings**:
+
 - How to structure authentication as an independent proof
 - Testing strategies for rate limiting
 - Integration patterns for API middleware
@@ -43,7 +46,7 @@ Have a great Design-Kit workflow to share? We'd love to include it!
 
 ### Template Structure
 
-```
+```text
 examples/your-project/
 ├── README.md           # Project overview
 ├── PLAN.md             # Master plan
@@ -68,6 +71,7 @@ We're particularly interested in examples for:
 ## Need Help?
 
 If you have a workflow to share but need help structuring it as an example:
+
 1. Open an issue with the `workflow-example` template
 2. Describe your project and what you learned
 3. We'll help you format it for inclusion

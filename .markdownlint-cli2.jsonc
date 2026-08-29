@@ -3,7 +3,19 @@
     "default": true,
     "MD013": false,
     "MD033": false,
-    "MD041": false
+    "MD041": false,
+    // Emphasis as heading. Every hit is inside design-kit's templates/, where a
+    // bold callout is content the plugin emits verbatim. Promoting it to a
+    // heading changes the generated document, not this repo's prose.
+    "MD036": false,
+    // Table pipe spacing. Pure style with no rendering difference, and the repo
+    // mixes compact and spaced tables across plugins that are edited
+    // independently.
+    "MD060": false,
+    // Ordered list prefix. A list interrupted by a fenced block is still one
+    // list to a reader, and continuing 2, 3, 4 is what the author meant.
+    // --fix renumbers it to 1, 2, 3, which changes the rendered document.
+    "MD029": false
   },
   "ignores": ["node_modules/**", "plugins/*/node_modules/**", ".claude/**"]
 }

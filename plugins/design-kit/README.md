@@ -10,12 +10,14 @@ Design-Kit is a Claude Code plugin that turns the "build → test → debug" cyc
 ## Why Design-Kit?
 
 Traditional development is sequential and slow:
-```
+
+```text
 Plan → Build → Test → Debug → Fix → Repeat (6-12 weeks)
 ```
 
 Design-Kit enables parallel execution and reduces risk:
-```
+
+```text
 Plan → Prove (parallel) → Replan → Integrate (with contracts) → 2-4 weeks
 ```
 
@@ -31,7 +33,7 @@ Plan → Prove (parallel) → Replan → Integrate (with contracts) → 2-4 week
 
 Design-Kit is distributed through the [aiverse](https://github.com/Piotr1215/aiverse) Claude Code marketplace.
 
-```
+```text
 /plugin marketplace add Piotr1215/aiverse
 /plugin install design-kit@aiverse
 ```
@@ -40,7 +42,7 @@ That's it. No clone, no install script. Updates ship through the marketplace.
 
 ## Quick start
 
-```
+```text
 # Lost? This always tells you the next command to run.
 /design-kit:dd-status
 
@@ -88,7 +90,7 @@ Connect proven components to the real system using **only** `CONTRACT.md` + `TES
 
 Plans live globally, not per-repo. Multiple repos and branches can share one project.
 
-```
+```text
 ~/.claude/specs/
 └── <slug>/
     ├── PLAN.md              # master plan
@@ -106,7 +108,7 @@ Plans live globally, not per-repo. Multiple repos and branches can share one pro
 
 Each repo participating in a project drops a pointer file:
 
-```
+```text
 <repo>/.claude/current-project    # plain text, single line: the slug
 ```
 

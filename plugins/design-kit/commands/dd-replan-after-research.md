@@ -88,7 +88,7 @@ For each item, cite the proof (e.g. "[from `proofs/observer-workflow/FEEDBACK.md
 
 Show the user a unified summary:
 
-```
+```text
 PROPOSED DELTAS
 ===============
 
@@ -143,7 +143,7 @@ Set `memory_sync: synced` in the marker.
 
 **If unreachable — sink: JSONL only:**
 
-```
+```text
 ⚠ mcp__agent-memory unreachable — memory bundle NOT synced to the store.
   memories.jsonl files remain canonical and committed.
   Re-running /design-kit:dd-replan-after-research when the server is back will sync (idempotent via dedupe).
@@ -200,6 +200,7 @@ The marker is the gate `/design-kit:dd-integration-tasks` will check. Re-running
 ### 6. Linear sync (if linear.yaml exists)
 
 If `$SPEC_DIR/linear.yaml` is present:
+
 - Update the Linear plan document with the new `PLAN.md` content (`mcp__linear-server__save_document` with `id` from `linear.yaml.plan_doc_id`)
 - Post a comment on each contributing Phase 1 issue: "Phase 1.5 complete — see updated plan: <plan_doc_url>" (only if the issue isn't already in a Done state)
 - Do **not** change Linear issue states automatically — that's the user's call
@@ -223,6 +224,7 @@ If MCP is unreachable, print a warning but still write the marker (local-only mo
 ## Verification
 
 After running:
+
 - ✅ `.phase-1.5-complete` exists at `$SPEC_DIR/`
 - ✅ Every proof's FEEDBACK.md was read and is reflected in the digest (or explicitly excluded)
 - ✅ User saw the proposed deltas before they were applied
