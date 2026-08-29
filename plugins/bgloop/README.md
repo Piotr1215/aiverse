@@ -25,8 +25,15 @@ One observer, the Luna prompt coach. It reads a submitted prompt, retrieves the 
 | `core/coach.py` | The decision core. Ledger, reservation accounting, session and daily token caps, learned-tip rules, the model call. No Claude-specific imports. |
 | `observers/prompt_coach.py` | The Claude shell. Capability rendering, transcript reading, delivery, the hook entry points. |
 | `hooks/hooks.json` | `UserPromptSubmit` enqueues a job, `Stop` clears the turn marker. |
+| `skills/bgloop/` | The operator surface: status, budgets, learned tips, replay. `/bgloop`. |
 | `scripts/tip_write.sh` | Writes the spinner seam, the surface a human reads the tip on. |
 | `tests/` | 94 tests. `uvx pytest tests/ -q` from the plugin root. |
+
+Neither hook group carries a `matcher`. That is not an omission: across every plugin installed on this machine, `Stop` and `UserPromptSubmit` groups carry one zero times out of 84 and 94. Matchers select tools, and neither of these events has one to select. plugin-dev's `validate-hook-schema.sh` reports a missing matcher here, and it is wrong for non-tool events.
+
+## Operating it
+
+`/bgloop` answers what the runtime is doing, why a decision did or did not fire, and what it has cost. It wraps the CLI in `core/coach.py`, which is also usable directly: `status`, `budget`, `learned`, `restore`, `replay`, `simulate`, `enable`, `disable`. The ledger vocabulary those commands print is documented in `skills/bgloop/references/ledger.md`.
 
 ## State
 

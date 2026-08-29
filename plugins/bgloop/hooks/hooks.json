@@ -1,11 +1,12 @@
 {
+  "description": "bgloop observers: UserPromptSubmit relays pending actions and queues the prompt coach, Stop closes the turn marker",
   "hooks": {
     "UserPromptSubmit": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/observers/prompt_coach.py hook",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/observers/prompt_coach.py\" hook",
             "timeout": 10
           }
         ]
@@ -16,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}\"/observers/prompt_coach.py turn-end",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/observers/prompt_coach.py\" turn-end",
             "timeout": 5
           }
         ]

@@ -50,7 +50,7 @@
 # settings file leaves the tip alone and exits 0: a hint is a nicety, and
 # nothing upstream should ever break because the nicety did.
 
-set -eo pipefail
+set -euo pipefail
 
 SETTINGS_FILE="${TIP_SETTINGS_FILE:-${CLAUDE_CONFIG_DIR:-$HOME/.claude}/settings.json}"
 LOCK_FILE="${TMPDIR:-/tmp}/claude-tip-write.lock"
