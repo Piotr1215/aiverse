@@ -96,6 +96,7 @@ This drops a pointer in their current repo and ensures the global spec dir exist
 ## MCP dependency
 
 The kit uses `mcp__linear-server__*` tools. If the MCP server is unreachable:
+
 - Commands print a clear error and exit non-zero
 - Local files are still written (so work isn't blocked)
 - User can re-run when MCP is healthy, or pass `LINEAR_SKIP=1` to bypass

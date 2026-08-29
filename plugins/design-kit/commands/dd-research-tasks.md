@@ -35,6 +35,7 @@ fi
 ## Context
 
 **Load these sources:**
+
 1. Read `$SPEC_DIR/PLAN.md` - component breakdown
 2. Check CLAUDE.md in the current repo for repo conventions
 3. Scan codebase for existing patterns
@@ -44,6 +45,7 @@ fi
 ### CRITICAL: Parallelism Check
 
 **Each task MUST be 100% independent:**
+
 - ✅ Can run simultaneously with all other Phase 1 tasks
 - ✅ Uses generic/sample test data (NOT real system data)
 - ✅ Proves ONE component works in isolation
@@ -55,6 +57,7 @@ fi
 Use this pattern: `TASK-P1-A-[Component].md`, `TASK-P1-B-[Component].md`, etc.
 
 Example:
+
 - `TASK-P1-A-pdf-generation.md`
 - `TASK-P1-B-auth-middleware.md`
 - `TASK-P1-C-graphql-parser.md`
@@ -119,8 +122,10 @@ Follow proven steps to skip pitfalls. If unreachable or no hits, you're producin
 Every insight you'd put in `FEEDBACK.md` (gotchas, harness setup steps, validator-choice rationale, contract patterns, schema gaps) ALSO gets one line appended to:
 
 ```
+
 $SPEC_DIR/proofs/<component>/memories.jsonl
-```
+
+```text
 
 JSONL — one memory per line, each line a ready `create_long_term_memories` payload entry.
 
@@ -148,7 +153,7 @@ Plus 1-3 content topics (lowercase-hyphenated, each its own array element — ne
 
 ```jsonl
 {"text":"[gotcha] cross-fork PR observer workflows can't write artifacts — token is read-only; observer must skip upload step","memory_type":"semantic","namespace":"<slug>","topics":["design-kit","phase-1-research","harness-setup","github-actions","workflow_run"],"entities":["GITHUB_TOKEN","actions/upload-artifact","file::proofs/observer-workflow/run.sh"]}
-```
+```text
 
 ### Strict rules
 
@@ -205,6 +210,7 @@ Working proof in `$SPEC_DIR/proofs/[component-name]/` with:
 ## Edge Cases for YOUR Use Case
 
 Think: "What breaks in MY specific scenario?"
+
 - API endpoint? → Large payloads, timeouts, retries, malformed JSON, Unicode
 - React form? → Async validation, rapid input, browser autofill, keyboard nav
 - K8s controller? → Multiple replicas, network partition, OOM, node drain
@@ -213,11 +219,13 @@ Think: "What breaks in MY specific scenario?"
 ## Done When
 
 All checkboxes above are complete with empirical evidence.
+
 ```
 
 ## Your Task
 
 For each component in PLAN.md:
+
 1. Create one TASK-P1-*.md file in `$SPEC_DIR/tasks/`
 2. Keep each task concise and focused
 3. Emphasize testing strategy upfront
@@ -256,10 +264,12 @@ If `linear.yaml` is absent, skip Linear sync entirely (local-only mode).
 ### MCP requirement
 
 Requires `mcp__linear-server__*`. If unreachable:
-```
+
+```text
 ❌ Linear MCP not reachable. Local tasks were written, but Linear issues were NOT created.
    Fix MCP and re-run /design-kit:dd-research-tasks.
 ```
+
 Do not silently continue.
 
 ### For each TASK-P1-*.md
@@ -324,6 +334,7 @@ Re-running `/design-kit:dd-research-tasks` on an already-bound plan must not cre
 ## Next Steps
 
 After tasks are generated:
+
 - Agent(s) execute Phase 1 tasks independently (locally and/or pulling Linear issues)
 - Each produces CONTRACT.md + TESTING.md + sufficient test runs to validate requirements
 - Run `/design-kit:dd-replan-after-research` to fold FEEDBACK into PLAN

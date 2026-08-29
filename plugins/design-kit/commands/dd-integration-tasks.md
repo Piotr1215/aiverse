@@ -95,6 +95,7 @@ fi
 ## Context
 
 **Load these sources:**
+
 1. Read `$SPEC_DIR/PLAN.md` - integration requirements
 2. Read all `$SPEC_DIR/proofs/*/CONTRACT.md` - proven component interfaces
 3. Read all `$SPEC_DIR/proofs/*/TESTING.md` - validation strategies
@@ -111,6 +112,7 @@ fi
 Phase 1.5 is no longer something this command does inline. It is a **separate command (`/design-kit:dd-replan-after-research`)** and is **enforced** by the marker check in the Setup block — if the marker is missing or stale, this command refuses to run and tells the user to run it.
 
 By the time you reach this section, you can trust:
+
 - All FEEDBACK.md files have been synthesized
 - Plan deltas have been reviewed by the user
 - PLAN.md (and SCHEMA.md if applicable) reflect the current understanding
@@ -126,18 +128,20 @@ Each integration task connects ONE proven component to the actual system.
 Use: `TASK-P2-C-[Feature]-Integration.md`, `TASK-P2-D-[Feature]-Integration.md`, etc.
 
 Example:
+
 - `TASK-P2-C-pdf-generation-integration.md`
 - `TASK-P2-D-auth-middleware-integration.md`
 
 ### Parallelism Check for Phase 2
 
 **Unlike Phase 1, Phase 2 tasks may need to be sequential:**
+
 - If tasks modify DIFFERENT files → Parallel ✅
 - If tasks modify SAME files → Sequential ❌ (mark dependencies)
 
 ### Task Template
 
-```markdown
+````markdown
 # TASK-P2-[X]-[Feature]-Integration (Phase 2)
 
 ## Goal
@@ -235,11 +239,13 @@ Integrate proven [component] from Phase 1 into [target system].
 5. Return to Phase 2 integration after refinement complete
 
 **Do NOT throw away Phase 1 work. Refine it.**
-```
+
+````
 
 ## Your Task
 
 For each component that needs integration:
+
 1. Analyze existing codebase implementation
 2. Read corresponding proof CONTRACT.md + TESTING.md
 3. Create one TASK-P2-*.md file in `$SPEC_DIR/tasks/`
@@ -342,12 +348,14 @@ The dedupe-via-search guarantee makes re-runs safe regardless of how many times 
 3. Probe `mcp__agent-memory__search_long_term_memory` (e.g. `query: "design-kit", namespace: "<slug>", limit: 1`).
 
 **If reachable:**
+
 - For each entry: `search_long_term_memory` for near-duplicates in `namespace=<slug>`. Skip dupes.
 - Single `mcp__agent-memory__create_long_term_memories` call per proof with novel entries.
 - Append outcomes to `proofs/<component>/memories.committed.jsonl` (one line per source entry, `status: created|skipped`, returned ID, `source_line`, and `phase: "phase-2-integration"` to distinguish from Phase 1 records).
 
 **If unreachable:**
-```
+
+```text
 ⚠ mcp__agent-memory unreachable — Phase 2 memory entries NOT synced.
   memories.jsonl files remain canonical and committed.
   Re-run /design-kit:dd-integration-tasks when the server is back to sync (idempotent via dedupe).
@@ -358,6 +366,7 @@ The dedupe-via-search guarantee makes re-runs safe regardless of how many times 
 ## Next Steps
 
 After Phase 2 tasks are generated:
+
 - Agent(s) execute integration tasks (locally and/or pulling Linear issues)
 - Re-run Phase 1 harnesses with real system data
 - If contract gaps found → create REFINEMENT tasks

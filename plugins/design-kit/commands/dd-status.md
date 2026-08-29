@@ -51,7 +51,7 @@ State detection — figure out where the project stands:
 
 Print one block. Keep it scannable.
 
-```
+```text
 Project: <slug> (or "no project bound")
 Spec dir: <SPEC_DIR>
 Linear:   <yes — link / no>
@@ -80,6 +80,7 @@ again. Surface them prominently so the open loop is visible — refinements are
 expected and normal, but invisible refinements rot.
 
 Per-proof row symbols:
+
 - `✓` = file present
 - `·` = file missing
 - check `CONTRACT.md` `TESTING.md` `FEEDBACK.md` in that order
@@ -106,7 +107,7 @@ ls -1 "$GLOBAL_SPECS" 2>/dev/null
 
 For each slug, detect a coarse phase using the same rules as single-project mode (no need for full state-block detail). Print one row per spec:
 
-```
+```bash
 SPECS UNDER ~/.claude/specs/
 
 slug                              phase                    last-touched         linear
@@ -137,7 +138,7 @@ find "$SPEC_DIR/tasks" -maxdepth 1 -name 'TASK-*.md' | sort
 
 Output:
 
-```
+```text
 Tasks in <slug>:
 
 Phase 1 (research)
@@ -158,6 +159,7 @@ State heuristic: P1 task is "done" if its component has CONTRACT.md+TESTING.md; 
 User wants the full content of one task file. Was `/norm-task <ID>`.
 
 Match `{ARGS}` against task IDs:
+
 - "A" → match `TASK-P1-A-*.md` (default Phase 1 if ambiguous)
 - "P1-A" / "p1 a" → `TASK-P1-A-*.md`
 - "P2-C" / "p2 c" → `TASK-P2-C-*.md`
@@ -167,6 +169,7 @@ If multiple files match, list them and ask the user to disambiguate.
 If zero match, print the task list (mode = task-list output) and tell the user to pick one.
 
 Then read the file and print:
+
 - Full content (use Read tool)
 - Status block: which proofs/contracts exist for this task, current state
 - Next-step hint based on state
@@ -181,6 +184,7 @@ Then read the file and print:
 ## Verification
 
 After running:
+
 - ✅ Nothing on disk changed
 - ✅ User can read the recommended next command and run it as-is
 - ✅ Stale Phase 1.5 surfaced even when the marker exists

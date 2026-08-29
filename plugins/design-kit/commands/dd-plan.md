@@ -71,7 +71,7 @@ sibling `FEEDBACK.md` (gotchas already discovered). Decide:
 
 Surface findings to the user before writing PLAN.md:
 
-```
+```text
 Corpus search for components: [token-validator, rate-limiter]
 
 Prior work found:
@@ -227,6 +227,7 @@ The kit can mirror the plan to a Linear project so the team sees the same source
    - Tool: `mcp__linear-server__save_document` (project=<id>, title=..., content=...)
 2. Read project milestones: `mcp__linear-server__get_project(includeMilestones: true)` and capture each milestone ID by name (M1, M2, M3 conventionally)
 3. Write `$SPEC_DIR/linear.yaml`:
+
    ```yaml
    project_id: <uuid>
    project_url: https://linear.app/<workspace>/project/<slug>
@@ -241,13 +242,14 @@ The kit can mirror the plan to a Linear project so the team sees the same source
    integrate_milestone: M3     # /design-kit:dd-integration-tasks issues land here
    issue_map: {}               # filled in by /design-kit:dd-research-tasks and /design-kit:dd-integration-tasks
    ```
+
 4. Echo: `Plan synced to Linear: <plan_doc_url>`
 
 ### MCP requirement
 
 Requires `mcp__linear-server__*` tools. If MCP is unreachable, **DO NOT silently skip** — print:
 
-```
+```text
 ❌ Linear MCP not reachable. Either:
    - fix the MCP server, OR
    - run with LINEAR_SKIP=1 to bypass and work local-only
@@ -280,6 +282,7 @@ Every Linear issue created by the toolchain must include this header:
 ## Next Steps
 
 After PLAN.md is created and (optionally) Linear-bound:
+
 - Run `/design-kit:dd-research-tasks` to generate Phase 1 parallel proof tasks
 - Complete all Phase 1 tasks independently
 - Run `/design-kit:dd-replan-after-research` to fold FEEDBACK into PLAN
