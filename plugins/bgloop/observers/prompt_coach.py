@@ -858,6 +858,19 @@ def enqueue(payload):
     if os.environ.get("PROMPT_COACH_SYNC") == "1":
         run_job(job_path)
         return 0
+    spawn_worker(Path(__file__).resolve(), job_path)
+    return 0
+
+
+def spawn_worker(script, job_path):
+    """Detach one worker for one job, with a whitelisted environment.
+
+    Split out of enqueue so a second observer reuses the environment rules
+    rather than reasoning about them again. The whitelist is the security
+    boundary here, not a tidiness preference: a detached process inherits
+    whatever it is given, and the two entries that matter are the two that
+    were once wrong.
+    """
     child_env = {
         key: value
         for key, value in os.environ.items()
@@ -887,7 +900,7 @@ def enqueue(payload):
     if resolved_home:
         child_env["CODEX_HOME"] = resolved_home
     subprocess.Popen(
-        [sys.executable, str(Path(__file__).resolve()), "run", str(job_path)],
+        [sys.executable, str(script), "run", str(job_path)],
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,

@@ -889,6 +889,76 @@ def finish_event(root, job, decision, usage, now_value, **extra):
     return row
 
 
+# ------------------------------------------------------------------- observers
+#
+# Every observer runs the same pipeline: gate, retrieve, estimate, reserve,
+# call, interpret, record, deliver. Only three of those steps differ between
+# one observer and the next, so those three are the contract and the pipeline
+# is written once. A second copy of process_job would drift on the first
+# threshold change, and metering every observer against one budget is the
+# reason this file exists rather than a second script beside it.
+
+OBSERVERS = {}
+
+
+def register_observer(kind, retrieve, request, interpret):
+    """Bind one observer's three variable steps to a job kind.
+
+    retrieve(job, root) returns whatever this observer needs to decide, and
+    that same value is handed back to interpret, so a validation step can
+    check the model against what it was actually shown.
+
+    request(job, context, root) returns the model request payload.
+
+    interpret(value, job, context, root) returns (decision, action, extra):
+    the ledger decision, the text delivered when the decision is "fired", and
+    the fields the ledger row carries. An observer that wants no delivery
+    returns any decision other than "fired".
+    """
+    OBSERVERS[kind] = (retrieve, request, interpret)
+
+
+def coach_retrieve(job, root):
+    return select_capabilities(job.get("prompt", ""), load_capabilities())
+
+
+def coach_request(job, context, root):
+    return response_payload(job, context, load_learned(root))
+
+
+def coach_interpret(value, job, context, root):
+    kind = value.get("kind")
+    tip = " ".join(str(value.get("tip") or "").split())[:140]
+    capability_id = str(value.get("capability_id") or "")
+    installed = {row["id"]: row for row in context}
+    if kind == "capability" and capability_id not in installed:
+        return "invalid-capability", "", {"capability_id": capability_id}
+    if kind != "capability" and capability_id:
+        return "invalid-capability", "", {"capability_id": capability_id}
+    if kind == "capability":
+        tip = render_capability_tip(tip, installed[capability_id])
+    if kind == "none" or not tip or not job.get("tip_allowed", True):
+        decision = "none"
+    elif is_learned(root, tip, capability_id):
+        decision = "learned"
+    else:
+        decision = "fired"
+    return (
+        decision,
+        tip,
+        {
+            "kind": kind,
+            "tip": tip if decision == "fired" else "",
+            "proposed_tip": tip,
+            "capability_id": capability_id,
+            "reason": clean_trace(value.get("reason", "")),
+        },
+    )
+
+
+register_observer("coach", coach_retrieve, coach_request, coach_interpret)
+
+
 def process_job(job, post=subscription_post, deliver=None, now=time.time):
     root = state_dir()
     now_value = float(now())
@@ -900,10 +970,17 @@ def process_job(job, post=subscription_post, deliver=None, now=time.time):
     if gate != "allow":
         return record_block(root, job, gate, now_value)
 
+    # An unregistered kind is a wiring mistake, not a decision. It is blocked
+    # rather than defaulted to the coach, because defaulting would answer a
+    # question this job never asked and bill the budget for it.
+    observer = str(job.get("observer") or "coach")
+    if observer not in OBSERVERS:
+        return record_block(root, job, "unknown-observer", now_value, observer=observer)
+    retrieve, build_request, interpret = OBSERVERS[observer]
+
     append_event(root, {**base_event(job, float(now())), "event": "started", "decision": "library"})
-    all_capabilities = load_capabilities()
-    selected = select_capabilities(job.get("prompt", ""), all_capabilities)
-    request = response_payload(job, selected, load_learned(root))
+    context = retrieve(job, root)
+    request = build_request(job, context, root)
     append_event(root, {**base_event(job, float(now())), "event": "request", "decision": "budget-estimate"})
     count_request = {key: request[key] for key in ("model", "instructions", "input", "text")}
     try:
@@ -928,35 +1005,8 @@ def process_job(job, post=subscription_post, deliver=None, now=time.time):
     if response.get("status") != "completed" or not value:
         return finish_event(root, job, "invalid-response", usage, float(now()))
 
-    kind = value.get("kind")
-    tip = " ".join(str(value.get("tip") or "").split())[:140]
-    capability_id = str(value.get("capability_id") or "")
-    installed = {row["id"]: row for row in selected}
-    if kind == "capability" and capability_id not in installed:
-        return finish_event(root, job, "invalid-capability", usage, float(now()), capability_id=capability_id)
-    if kind != "capability" and capability_id:
-        return finish_event(root, job, "invalid-capability", usage, float(now()), capability_id=capability_id)
-    if kind == "capability":
-        tip = render_capability_tip(tip, installed[capability_id])
-    if kind == "none" or not tip or not job.get("tip_allowed", True):
-        decision = "none"
-    elif is_learned(root, tip, capability_id):
-        decision = "learned"
-    else:
-        decision = "fired"
-
-    record = finish_event(
-        root,
-        job,
-        decision,
-        usage,
-        float(now()),
-        kind=kind,
-        tip=tip if decision == "fired" else "",
-        proposed_tip=tip,
-        capability_id=capability_id,
-        reason=clean_trace(value.get("reason", "")),
-    )
+    decision, _action, extra = interpret(value, job, context, root)
+    record = finish_event(root, job, decision, usage, float(now()), **extra)
     if deliver is None:
         deliver = deliver_tip
     if decision == "fired":
