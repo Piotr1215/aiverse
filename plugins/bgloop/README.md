@@ -66,14 +66,16 @@ A turn marker written on `UserPromptSubmit` and removed on `Stop` separates a pu
 
 ## Installing
 
-The plugin ships disabled, because `~/.claude/settings.json` still wires the same two hooks to the pre-plugin copies of these files. Enabling before removing them runs the coach twice per prompt against one budget.
-
 ```bash
 /plugin install bgloop@aiverse
-# remove the UserPromptSubmit and Stop entries for __claude_prompt_coach.py
-# from ~/.claude/settings.json, then:
-claude plugin enable bgloop
+claude plugin enable bgloop@aiverse
 ```
+
+Two steps, because the plugin ships `defaultEnabled: false`. Every prompt it observes costs a model call against a real budget, and a plugin that starts spending the moment it lands is a plugin that should have asked first.
+
+Hooks load at session start, so restart or run `/reload-plugins` before expecting the first tip. The coach also has its own on switch, separate from the plugin's: `ctips --enable`, or `python3 "${CLAUDE_PLUGIN_ROOT}/core/coach.py" enable`.
+
+Migrating from the pre-plugin scripts in `~/.claude/scripts`: remove the `UserPromptSubmit` and `Stop` entries for `__claude_prompt_coach.py` from `settings.json` before enabling, or the coach runs twice per prompt against one budget.
 
 ## Not here yet
 
