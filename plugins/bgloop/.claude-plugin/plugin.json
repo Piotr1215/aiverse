@@ -10,6 +10,5 @@
   "repository": "https://github.com/Piotr1215/aiverse",
   "license": "MIT",
   "keywords": ["observer", "hooks", "coach", "background", "ledger"],
-  "hooks": "./hooks/hooks.json",
   "defaultEnabled": false
 }
